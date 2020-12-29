@@ -105,18 +105,6 @@ long LinuxParser::UpTime() {
   return std::stol(total_time); 
   }
 
-// Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
-
-// Read and return the number of active jiffies for a PID
-
-//long LinuxParser::ActiveJiffies(int pid) { return 0; }
-
-// Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
 
 // Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { 
@@ -210,7 +198,8 @@ string LinuxParser::Ram(int pid) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "VmSize") {
-          return value;
+          return to_string(std::stol(value)/1000);
+          //return value;
         }
       }
     }
@@ -274,7 +263,7 @@ long LinuxParser::proc_UpTime(int pid) {
     }
     up_time =  std::stol(value)/sysconf(_SC_CLK_TCK);
   }
-  return up_time; 
+  return UpTime() - up_time; 
   }
 
 float LinuxParser::Proc_cpuUtilization (int pid){ 
